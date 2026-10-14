@@ -1,0 +1,579 @@
+/*
+ * Wedding Dress Size Calculator
+ * Everything is scoped under .wdsc so the theme's own styles are untouched.
+ * Type is inherited from the theme; no fonts are loaded here.
+ * Colours are tokens: change --wdsc-accent to restyle the tool.
+ */
+
+.wdsc {
+  --wdsc-text: #1d1d1f;
+  --wdsc-muted: #4a4a4f;
+  --wdsc-line: #85858c;        /* input borders, 3:1 against white */
+  --wdsc-rule: #e3e3e6;
+  --wdsc-surface: #f7f6f5;
+  --wdsc-accent: #7a2e4f;      /* restrained plum: buttons, focus, deciding marker */
+  --wdsc-accent-tint: #f6edf1;
+  --wdsc-on-accent: #ffffff;
+  --wdsc-error: #8f1d1d;
+  --wdsc-radius: 8px;
+
+  color: var(--wdsc-text);
+  background: #ffffff;
+  line-height: 1.6;
+  max-width: 46rem;
+  margin: 0 auto;
+  overflow-wrap: break-word;
+}
+
+.wdsc *,
+.wdsc *::before,
+.wdsc *::after {
+  box-sizing: border-box;
+}
+
+.wdsc a {
+  color: var(--wdsc-accent);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.wdsc a:hover {
+  text-decoration-thickness: 2px;
+}
+
+.wdsc :focus-visible {
+  outline: 3px solid var(--wdsc-accent);
+  outline-offset: 2px;
+}
+
+.wdsc-sr,
+.wdsc-offscreen {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.wdsc-small {
+  font-size: 0.875rem;
+  color: var(--wdsc-muted);
+}
+
+/* ------------------------------------------------------------------ */
+/* Start-up states: no JavaScript, script failed, or data failed.      */
+/* The fallback is plain text and links. There is never a spinner.     */
+/* ------------------------------------------------------------------ */
+
+.wdsc-fallback {
+  display: none;
+  padding: 1rem 1.25rem;
+  margin: 1rem 0;
+  background: var(--wdsc-surface);
+  border-left: 4px solid var(--wdsc-line);
+}
+
+html:not(.wdsc-js) .wdsc-fallback,
+html.wdsc-failed .wdsc-fallback,
+.wdsc.wdsc-failed .wdsc-fallback {
+  display: block;
+}
+
+html:not(.wdsc-js) .wdsc-form,
+html.wdsc-failed .wdsc-form,
+html.wdsc-failed .wdsc-result {
+  display: none;
+}
+
+/* ------------------------------------------------------------------ */
+/* Tool                                                                */
+/* ------------------------------------------------------------------ */
+
+.wdsc-tool {
+  padding: 1.25rem 1rem 1.5rem;
+  margin: 0 0 2.5rem;
+  border: 1px solid var(--wdsc-rule);
+  border-radius: var(--wdsc-radius);
+  background: #ffffff;
+}
+
+@media (min-width: 600px) {
+  .wdsc-tool {
+    padding: 2rem 2rem 2.25rem;
+  }
+}
+
+.wdsc-tool h2 {
+  margin: 0 0 0.5rem;
+}
+
+.wdsc-lede {
+  margin: 0 0 1.5rem;
+  color: var(--wdsc-muted);
+}
+
+.wdsc-form {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.wdsc-field label,
+.wdsc-units legend {
+  display: block;
+  margin: 0 0 0.375rem;
+  font-size: 1rem;
+  color: var(--wdsc-text);
+}
+
+.wdsc-unit-label {
+  color: var(--wdsc-muted);
+}
+
+.wdsc .wdsc-field input[type="text"],
+.wdsc .wdsc-field select {
+  display: block;
+  width: 100%;
+  min-height: 48px;
+  padding: 0.5rem 0.75rem;
+  font: inherit;
+  font-size: 1.125rem;          /* 16px+ stops iOS zooming on focus */
+  color: var(--wdsc-text);
+  background: #ffffff;
+  border: 1px solid var(--wdsc-line);
+  border-radius: 6px;
+}
+
+.wdsc .wdsc-field input[aria-invalid="true"],
+.wdsc .wdsc-field select[aria-invalid="true"] {
+  border: 2px solid var(--wdsc-error);
+}
+
+.wdsc-hint,
+.wdsc-measure-note {
+  margin: 0.375rem 0 0;
+  font-size: 0.9375rem;
+  color: var(--wdsc-muted);
+}
+
+.wdsc-measure-note {
+  margin: 0;
+  padding: 0.75rem 1rem;
+  background: var(--wdsc-surface);
+  border-radius: 6px;
+}
+
+.wdsc-msg {
+  margin: 0.375rem 0 0;
+  padding-left: 0.75rem;
+  font-size: 0.9375rem;
+  border-left: 3px solid var(--wdsc-line);
+}
+
+.wdsc-msg-error {
+  color: var(--wdsc-error);
+  border-left-color: var(--wdsc-error);
+}
+
+.wdsc-msg-check {
+  color: var(--wdsc-muted);
+}
+
+/* Units: a two-option segmented control built from real radio buttons. */
+.wdsc-units {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+}
+
+.wdsc-toggle {
+  display: inline-flex;
+  border: 1px solid var(--wdsc-line);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.wdsc-toggle input {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+}
+
+.wdsc .wdsc-toggle label {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  min-width: 44px;
+  margin: 0;
+  padding: 0 1.125rem;
+  cursor: pointer;
+  color: var(--wdsc-text);
+  background: #ffffff;
+}
+
+.wdsc .wdsc-toggle input:checked + label {
+  color: var(--wdsc-on-accent);
+  background: var(--wdsc-accent);
+}
+
+.wdsc-toggle input:focus-visible + label {
+  outline: 3px solid var(--wdsc-accent);
+  outline-offset: -5px;
+  box-shadow: inset 0 0 0 5px #ffffff;
+}
+
+/* How-to-measure disclosure, next to each field. */
+.wdsc-guide {
+  margin: 0.25rem 0 0;
+}
+
+.wdsc-guide summary {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  cursor: pointer;
+  color: var(--wdsc-accent);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.wdsc-guide-body {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.25rem;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  background: var(--wdsc-surface);
+  border-radius: 6px;
+}
+
+.wdsc-guide-body p {
+  flex: 1 1 14rem;
+  margin: 0;
+}
+
+.wdsc-diagram {
+  width: 150px;
+  height: auto;
+  flex: 0 0 auto;
+}
+
+.wdsc-form-outline {
+  fill: none;
+  stroke: var(--wdsc-muted);
+  stroke-width: 1.5;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+.wdsc-tape {
+  stroke: #b8b8be;
+  stroke-width: 1.5;
+  stroke-dasharray: 3 3;
+}
+
+.wdsc-tape-active {
+  stroke: var(--wdsc-accent);
+  stroke-width: 3;
+  stroke-dasharray: none;
+  stroke-linecap: round;
+}
+
+.wdsc-diagram-label {
+  fill: var(--wdsc-accent);
+  font: inherit;
+  font-size: 13px;
+}
+
+/* Buttons. Hello Elementor styles every button; these override it here only. */
+.wdsc .wdsc-button {
+  display: block;
+  width: 100%;
+  min-height: 52px;
+  padding: 0.75rem 1.5rem;
+  font: inherit;
+  font-size: 1.125rem;
+  line-height: 1.3;
+  color: var(--wdsc-on-accent);
+  background: var(--wdsc-accent);
+  border: 2px solid var(--wdsc-accent);
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.wdsc .wdsc-button:hover,
+.wdsc .wdsc-button:focus {
+  color: var(--wdsc-on-accent);
+  background: #5f2340;
+  border-color: #5f2340;
+}
+
+@media (min-width: 600px) {
+  .wdsc .wdsc-button {
+    display: inline-block;
+    width: auto;
+  }
+}
+
+.wdsc .wdsc-button-secondary {
+  display: inline-block;
+  width: auto;
+  min-height: 44px;
+  font-size: 1rem;
+  color: var(--wdsc-accent);
+  background: #ffffff;
+}
+
+.wdsc .wdsc-button-secondary:hover,
+.wdsc .wdsc-button-secondary:focus {
+  color: var(--wdsc-on-accent);
+  background: var(--wdsc-accent);
+  border-color: var(--wdsc-accent);
+}
+
+.wdsc .wdsc-linkbutton {
+  display: inline;
+  min-height: 0;
+  padding: 0;
+  font: inherit;
+  color: var(--wdsc-accent);
+  background: none;
+  border: 0;
+  border-radius: 0;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+}
+
+.wdsc .wdsc-linkbutton:hover,
+.wdsc .wdsc-linkbutton:focus {
+  color: var(--wdsc-accent);
+  background: none;
+  text-decoration-thickness: 2px;
+}
+
+/* ------------------------------------------------------------------ */
+/* Result                                                              */
+/* ------------------------------------------------------------------ */
+
+.wdsc-result:not(:empty) {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--wdsc-rule);
+  scroll-margin-top: 1rem;
+}
+
+.wdsc-result h3 {
+  margin: 1.25rem 0 0.25rem;
+  font-size: 1.25rem;
+  line-height: 1.35;
+}
+
+.wdsc-result h4 {
+  margin: 1.75rem 0 0.5rem;
+  font-size: 1.0625rem;
+}
+
+.wdsc-result h3:focus {
+  outline: none;
+}
+
+.wdsc-context {
+  padding: 0.875rem 1rem;
+  background: var(--wdsc-surface);
+  border-left: 4px solid var(--wdsc-accent);
+  border-radius: 0 6px 6px 0;
+}
+
+.wdsc-context p {
+  margin: 0;
+}
+
+.wdsc-headline {
+  margin: 0.25rem 0 0;
+  font-size: 1.125rem;
+  color: var(--wdsc-muted);
+}
+
+.wdsc-size {
+  font-size: 2.75rem;
+  line-height: 1.1;
+  color: var(--wdsc-text);
+}
+
+.wdsc-source {
+  margin: 0.25rem 0 1.25rem;
+  font-size: 0.875rem;
+  color: var(--wdsc-muted);
+}
+
+/* The straddle table is the centrepiece of the result. */
+.wdsc-table-wrap {
+  overflow-x: auto;
+  margin: 0 0 1rem;
+}
+
+.wdsc table {
+  width: 100%;
+  margin: 0;
+  border-collapse: collapse;
+  font-size: 1rem;
+  background: transparent;
+}
+
+.wdsc caption {
+  padding: 0 0 0.5rem;
+  text-align: left;
+  color: var(--wdsc-muted);
+  font-size: 0.9375rem;
+}
+
+.wdsc table th,
+.wdsc table td {
+  padding: 0.75rem 0.5rem;
+  text-align: left;
+  vertical-align: top;
+  line-height: 1.4;
+  border: 0;
+  border-bottom: 1px solid var(--wdsc-rule);
+  background: transparent;
+}
+
+.wdsc table thead th {
+  font-size: 0.875rem;
+  color: var(--wdsc-muted);
+  border-bottom: 2px solid var(--wdsc-text);
+}
+
+.wdsc table tbody > tr:nth-child(odd) > td,
+.wdsc table tbody > tr:nth-child(odd) > th,
+.wdsc table tbody tr:hover > td,
+.wdsc table tbody tr:hover > th {
+  background: transparent;
+}
+
+.wdsc-straddle {
+  font-size: 1.0625rem;
+}
+
+.wdsc .wdsc-straddle tbody th,
+.wdsc .wdsc-straddle td {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
+.wdsc .wdsc-straddle tr.wdsc-deciding > th,
+.wdsc .wdsc-straddle tr.wdsc-deciding > td {
+  background: var(--wdsc-accent-tint);
+}
+
+.wdsc .wdsc-straddle tr.wdsc-deciding > th {
+  box-shadow: inset 4px 0 0 var(--wdsc-accent);
+  padding-left: 0.875rem;
+}
+
+.wdsc-mark {
+  display: block;
+  font-size: 0.875rem;
+  color: var(--wdsc-accent);
+}
+
+.wdsc-published {
+  display: block;
+  font-size: 0.8125rem;
+  color: var(--wdsc-muted);
+}
+
+.wdsc-note {
+  padding: 0.875rem 1rem;
+  border: 1px solid var(--wdsc-rule);
+  border-radius: 6px;
+}
+
+.wdsc-note p {
+  margin: 0;
+}
+
+.wdsc-rule {
+  color: var(--wdsc-muted);
+}
+
+.wdsc-quote {
+  margin: 1rem 0;
+  padding: 0.25rem 0 0.25rem 1rem;
+  border-left: 3px solid var(--wdsc-rule);
+  font-style: normal;
+}
+
+.wdsc-quote p {
+  margin: 0 0 0.25rem;
+}
+
+.wdsc-quote footer {
+  font-size: 0.875rem;
+}
+
+.wdsc-alter li,
+.wdsc-caveats li,
+.wdsc-next li,
+.wdsc-routes li,
+.wdsc-beyond li {
+  margin-bottom: 0.5rem;
+}
+
+.wdsc-copy {
+  margin-top: 1.75rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--wdsc-rule);
+}
+
+.wdsc-copy-status {
+  margin-left: 0.75rem;
+  color: var(--wdsc-muted);
+}
+
+.wdsc-copy p {
+  margin: 0.5rem 0 0;
+}
+
+/* ------------------------------------------------------------------ */
+/* Article                                                             */
+/* ------------------------------------------------------------------ */
+
+.wdsc-article section {
+  margin: 0 0 2.5rem;
+}
+
+.wdsc-article h3 {
+  margin-top: 1.5rem;
+}
+
+.wdsc .wdsc-example td.wdsc-deciding {
+  background: var(--wdsc-accent-tint);
+}
+
+.wdsc-example .wdsc-arrow {
+  color: var(--wdsc-accent);
+}
+
+.wdsc-index {
+  font-size: 0.9375rem;
+}
+
+.wdsc-chart-notes {
+  font-size: 0.9375rem;
+  color: var(--wdsc-muted);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wdsc * {
+    transition: none !important;
+    animation: none !important;
+    scroll-behavior: auto !important;
+  }
+}

@@ -298,6 +298,11 @@
     FIELDS.forEach(function (field) {
       var raw = inputs[field].value;
       var value = parseMeasurement(raw);
+      // After a unit switch the box shows a rounded value; use the exact
+      // conversion so a measurement on a chart line stays on that line.
+      if (inputs[field].getAttribute('data-shown') === raw.trim()) {
+        value = parseFloat(inputs[field].getAttribute('data-exact'));
+      }
       if (raw.trim() === '') {
         setMessage(field, 'error', 'Enter your ' + field + ' measurement.');
         firstInvalid = firstInvalid || inputs[field];
@@ -351,32 +356,42 @@
     var rows = FIELDS.map(function (field) {
       var deciding = r.status === 'ok' && r.deciding.indexOf(field) !== -1;
       var beyond = r.beyond.indexOf(field) !== -1;
-      var yours = num(r.body[field]) + ' ' + unitLabel(r.unit);
       var maps;
       var chart;
       if (beyond) {
         maps = 'Beyond this chart';
-        chart = 'Largest: ' + chartValueText(r.largest[field], r.brand, r.unit);
+        chart = 'Largest size ' + esc(r.largest.size) + ': ' + chartCell(r.largest[field], r.brand, r.unit);
       } else {
         var row = r.brand.sizes[r.index[field]];
-        maps = 'Size ' + row.size;
-        chart = chartValueText(row[field], r.brand, r.unit);
+        maps = 'Size ' + esc(row.size);
+        chart = chartCell(row[field], r.brand, r.unit);
       }
-      var mark = deciding ? '<span class="wdsc-arrow" aria-hidden="true">&rarr;</span> Sets the size' : '';
+      if (deciding) {
+        maps += '<span class="wdsc-mark"><span class="wdsc-arrow" aria-hidden="true">&rarr;</span> sets the size</span>';
+      }
       return '<tr' + (deciding ? ' class="wdsc-deciding"' : '') + '>' +
         '<th scope="row">' + LABELS[field] + '</th>' +
-        '<td>' + esc(yours) + '</td>' +
-        '<td class="wdsc-maps">' + esc(maps) + '</td>' +
-        '<td>' + esc(chart) + '</td>' +
-        '<td class="wdsc-mark">' + mark + '</td>' +
+        '<td>' + esc(num(r.body[field]) + ' ' + unitLabel(r.unit)) + '</td>' +
+        '<td class="wdsc-maps">' + maps + '</td>' +
+        '<td>' + chart + '</td>' +
         '</tr>';
     }).join('');
 
     return '<div class="wdsc-table-wrap"><table class="wdsc-straddle">' +
       '<caption>Where each measurement lands on the ' + esc(r.brand.brand_name) + ' chart</caption>' +
-      '<thead><tr><th scope="col">Measurement</th><th scope="col">Yours</th><th scope="col">Matches</th>' +
-      '<th scope="col">Chart measurement</th><th scope="col"><span class="wdsc-sr">Note</span></th></tr></thead>' +
+      '<thead><tr><th scope="col"><span class="wdsc-sr">Measurement</span></th><th scope="col">Yours</th>' +
+      '<th scope="col">Matches</th><th scope="col">Chart at that size</th></tr></thead>' +
       '<tbody>' + rows + '</tbody></table></div>';
+  }
+
+  // Chart value for a table cell: user's unit, plus the published value
+  // underneath when the brand publishes in the other unit.
+  function chartCell(value, brand, unit) {
+    if (brand.units === unit) {
+      return esc(num(value) + ' ' + unitLabel(unit));
+    }
+    return esc(num(convert(value, brand.units, unit)) + ' ' + unitLabel(unit)) +
+      '<span class="wdsc-published">published as ' + esc(num(value) + ' ' + unitLabel(brand.units)) + '</span>';
   }
 
   function straddleMessage(r) {
@@ -457,7 +472,7 @@
     return '<h4>Before you order</h4><ul class="wdsc-caveats">' +
       '<li>This is a starting point, not a guarantee of fit.</li>' +
       '<li>It applies to the ' + esc(brand.brand_name) + ' chart only. Other designers size differently.</li>' +
-      '<li>Confirm against ' + esc(brand.brand_name) + '’s current chart before ordering. Charts change.</li>' +
+      '<li>Confirm against the current ' + esc(brand.brand_name) + ' chart before ordering. Charts change.</li>' +
       '<li>Nothing you entered was saved or sent anywhere.</li></ul>';
   }
 
@@ -527,7 +542,7 @@
 
     var html = contextNote() +
       '<h3 class="wdsc-result-title" tabindex="-1">The ' + esc(brand.brand_name) + ' chart stops at size ' + esc(r.largest.size) + '</h3>' +
-      '<p>' + esc(brand.brand_name) + '’s published chart does not go far enough for these measurements, so it has no size to suggest. ' +
+      '<p>The published ' + esc(brand.brand_name) + ' chart does not go far enough for these measurements, so it has no size to suggest. ' +
       'That is where this designer’s chart ends. It is a limit of the chart, and it says nothing about you.</p>' +
       '<ul class="wdsc-beyond">' + lines + '</ul>' +
       sourceLine(brand) +
@@ -645,9 +660,16 @@
     });
     if (convertValues && previous !== unit) {
       FIELDS.forEach(function (field) {
-        var value = parseMeasurement(inputs[field].value);
+        var input = inputs[field];
+        var value = parseMeasurement(input.value);
+        if (input.getAttribute('data-shown') === input.value.trim()) {
+          value = parseFloat(input.getAttribute('data-exact'));
+        }
         if (value > 0) {
-          inputs[field].value = num(convert(value, previous, unit));
+          var exact = convert(value, previous, unit);
+          input.value = num(exact);
+          input.setAttribute('data-exact', String(exact));
+          input.setAttribute('data-shown', input.value);
         }
       });
     }
