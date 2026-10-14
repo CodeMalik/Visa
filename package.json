@@ -3,6 +3,7 @@
   "private": true,
   "description": "Development checks only. Nothing here ships to WordPress and there are no dependencies.",
   "scripts": {
-    "test": "node --test tests/*.test.js"
+    "test": "node --test tests/*.test.js",
+    "test:browser": "NODE_PATH=\"$(npm root -g)\" node --test tests/browser-check.js"
   }
 }

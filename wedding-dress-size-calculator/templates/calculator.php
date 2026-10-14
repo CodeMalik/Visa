@@ -49,10 +49,8 @@ window.addEventListener('load', function () {
 		<fieldset class="wdsc-units">
 			<legend>Units</legend>
 			<div class="wdsc-toggle">
-				<input type="radio" name="wdsc-unit" id="wdsc-unit-in" value="in" checked>
-				<label for="wdsc-unit-in">Inches</label>
-				<input type="radio" name="wdsc-unit" id="wdsc-unit-cm" value="cm">
-				<label for="wdsc-unit-cm">Centimetres</label>
+				<label class="wdsc-toggle-option"><input type="radio" name="wdsc-unit" id="wdsc-unit-in" value="in" checked><span>Inches</span></label>
+				<label class="wdsc-toggle-option"><input type="radio" name="wdsc-unit" id="wdsc-unit-cm" value="cm"><span>Centimetres</span></label>
 			</div>
 		</fieldset>
 

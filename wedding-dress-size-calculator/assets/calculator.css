@@ -20,6 +20,7 @@
   color: var(--wdsc-text);
   background: #ffffff;
   line-height: 1.6;
+  position: relative;
   max-width: 46rem;
   margin: 0 auto;
   overflow-wrap: break-word;
@@ -197,31 +198,40 @@ html.wdsc-failed .wdsc-result {
   overflow: hidden;
 }
 
-.wdsc-toggle input {
-  position: absolute;
-  opacity: 0;
-  width: 1px;
-  height: 1px;
+.wdsc .wdsc-toggle-option {
+  position: relative;
+  display: block;
+  margin: 0;
 }
 
-.wdsc .wdsc-toggle label {
+/* The real radio covers its whole option, invisibly, so taps and clicks
+   land on it directly and screen readers announce a normal radio group. */
+.wdsc-toggle-option input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.wdsc-toggle-option span {
   display: flex;
   align-items: center;
   min-height: 44px;
   min-width: 44px;
-  margin: 0;
   padding: 0 1.125rem;
-  cursor: pointer;
   color: var(--wdsc-text);
   background: #ffffff;
 }
 
-.wdsc .wdsc-toggle input:checked + label {
+.wdsc-toggle-option input:checked + span {
   color: var(--wdsc-on-accent);
   background: var(--wdsc-accent);
 }
 
-.wdsc-toggle input:focus-visible + label {
+.wdsc-toggle-option input:focus-visible + span {
   outline: 3px solid var(--wdsc-accent);
   outline-offset: -5px;
   box-shadow: inset 0 0 0 5px #ffffff;
@@ -414,6 +424,7 @@ html.wdsc-failed .wdsc-result {
 
 /* The straddle table is the centrepiece of the result. */
 .wdsc-table-wrap {
+  position: relative;           /* keeps screen-reader-only text inside the scroll area */
   overflow-x: auto;
   margin: 0 0 1rem;
 }
