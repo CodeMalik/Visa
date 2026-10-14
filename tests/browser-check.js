@@ -131,7 +131,8 @@ test('62 in bust on Allure gives the designed route, not the top size and not an
   assert.equal(await page.$('#wdsc-result .wdsc-size'), null, 'no size is recommended');
   const text = await page.textContent('#wdsc-result');
   assert.match(text, /a limit of the chart, and it says nothing about you/);
-  assert.match(text, /Azazie: size WD30 on its chart/);
+  assert.match(text, /Azazie: size WD30 on its chart \(source \(opens in a new tab\), checked 13 Oct 2026\)/);
+  assert.ok(await page.$('#wdsc-result .wdsc-routes a[href="https://www.azazie.com/size-chart"]'));
   assert.match(text, /offers custom sizing/);
   assert.ok(await page.$('#wdsc-result a[href$="/plus-size-wedding-dresses-that-flatter/"]'));
   assert.doesNotMatch(text, /error|sorry|unfortunately|invalid/i);

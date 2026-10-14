@@ -531,7 +531,8 @@
     if (fits.length) {
       fitHtml = '<p>These charts in this calculator do extend to your measurements:</p><ul class="wdsc-routes">' +
         fits.map(function (f) {
-          return '<li><strong>' + esc(f.brand.brand_name) + ':</strong> ' + esc(sizeName(f.size)) + ' on its chart. ' +
+          return '<li><strong>' + esc(f.brand.brand_name) + ':</strong> ' + esc(sizeName(f.size)) + ' on its chart (' +
+            link(f.brand.source_url, 'source', true) + ', checked ' + esc(formatDate(f.brand.captured)) + '). ' +
             '<button type="button" class="wdsc-linkbutton" data-wdsc-brand="' + esc(f.brand.brand_id) + '">See the ' +
             esc(f.brand.brand_name) + ' result</button></li>';
         }).join('') + '</ul>';

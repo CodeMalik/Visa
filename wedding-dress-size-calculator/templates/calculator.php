@@ -187,6 +187,16 @@ window.addEventListener('load', function () {
 				</tbody>
 			</table>
 		</div>
+		<p class="wdsc-source">Sources:
+			<?php
+			$wdsc_cites = array();
+			foreach ( $wdsc_rows as $wdsc_row ) {
+				$wdsc_cites[] = wdsc_external_link( $wdsc_row['brand']['source_url'], $wdsc_row['brand']['brand_name'] . ' size chart' ) .
+					', checked ' . esc_html( wdsc_date( $wdsc_row['brand']['captured'] ) );
+			}
+			echo implode( ' &middot; ', $wdsc_cites ); // phpcs:ignore WordPress.Security.EscapeOutput
+			?>
+		</p>
 		<?php if ( count( array_unique( $wdsc_answers ) ) > 1 ) : ?>
 			<p>The same measurements give a different answer depending on the chart, and within a single chart the three measurements do not always agree. That is why the calculator shows where each measurement lands, which one sets the size, and what would need taking in, rather than a single number.</p>
 		<?php endif; ?>

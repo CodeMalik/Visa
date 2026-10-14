@@ -130,6 +130,12 @@ test('every brand on the page shows its source link and capture date', () => {
     assert.ok(row.includes(`href="${brand.source_url}"`), `${brand.brand_name} source link`);
     assert.ok(row.includes(`datetime="${brand.captured}"`), `${brand.brand_name} capture date`);
   }
+  // The worked example cites every chart it uses, right under the table.
+  const example = markup.match(/<table class="wdsc-example">[\s\S]*?<\/table>\s*<\/div>\s*<p class="wdsc-source">([\s\S]*?)<\/p>/)[1];
+  for (const brand of db.brands) {
+    assert.ok(example.includes(`href="${brand.source_url}"`), `${brand.brand_name} source under the example`);
+  }
+  assert.equal((example.match(/checked 13 Oct 2026/g) || []).length, db.brands.length);
   // The result source line in the browser is checked by tests/browser-check.js.
 });
 
