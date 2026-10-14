@@ -143,6 +143,11 @@ function wdsc_date( $iso ) {
 	return $date ? $date->format( 'j M Y' ) : $iso;
 }
 
+function wdsc_count_word( $n ) {
+	$words = array( 'zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten' );
+	return isset( $words[ $n ] ) ? $words[ $n ] : (string) $n;
+}
+
 function wdsc_unit_name( $unit ) {
 	return 'in' === $unit ? 'inches' : 'centimetres';
 }
@@ -222,7 +227,7 @@ function wdsc_faqs( $data, $links ) {
 	return array(
 		array(
 			'q' => 'Is bridal sizing different from normal clothing sizing?',
-			'a' => 'Yes. Bridal sizing runs roughly three sizes larger than everyday clothing sizing, according to ' . $knot . ', because it grew out of an older European sizing system that was never brought into line with modern clothing labels. Each designer also publishes its own chart. A higher bridal number than usual describes how that designer cuts its gowns, not anything about you.',
+			'a' => 'Yes. Bridal sizing runs roughly three sizes larger than everyday clothing sizing, according to ' . $knot . ', because the bridal system derives from 1940s European sizing. Each designer also publishes its own chart. A higher bridal number than usual describes how that designer cuts its gowns, not anything about you.',
 		),
 		array(
 			'q' => 'What size should I order if my measurements fall in different sizes?',
@@ -234,7 +239,7 @@ function wdsc_faqs( $data, $links ) {
 		),
 		array(
 			'q' => 'How much can a wedding dress be taken in?',
-			'a' => 'About two sizes is typical, according to ' . $knot . '. More is sometimes possible, but it becomes a larger job that can mean reworking seams, lining and detailing, and the cost rises with it. Our <a href="' . esc_url( $links['alterations'] ) . '">alterations cost guide</a> covers what to expect.',
+			'a' => 'About two sizes is typical, according to ' . $knot . '. If you would need more than that, ask a seamstress to look at the specific gown before you order. Our <a href="' . esc_url( $links['alterations'] ) . '">alterations cost guide</a> covers what to expect.',
 		),
 		array(
 			'q' => 'Should I order a smaller size than my measurements show?',
@@ -260,6 +265,9 @@ function wdsc_faqs( $data, $links ) {
  * ---------------------------------------------------------------------- */
 
 function wdsc_rank_math_breadcrumbs_on() {
+	if ( is_callable( array( 'RankMath\\Helper', 'is_breadcrumbs_enabled' ) ) ) {
+		return (bool) call_user_func( array( 'RankMath\\Helper', 'is_breadcrumbs_enabled' ) );
+	}
 	if ( is_callable( array( 'RankMath\\Helper', 'get_settings' ) ) ) {
 		return (bool) call_user_func( array( 'RankMath\\Helper', 'get_settings' ), 'general.breadcrumbs' );
 	}

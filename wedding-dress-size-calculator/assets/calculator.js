@@ -173,6 +173,11 @@
     return;
   }
 
+  // Performance plugins that delay scripts can run this after the page's
+  // load check has already shown the fallback. Recover from that here.
+  document.documentElement.classList.add('wdsc-js');
+  document.documentElement.classList.remove('wdsc-failed');
+
   var form = root.querySelector('.wdsc-form');
   var brandSelect = document.getElementById('wdsc-brand');
   var resultBox = document.getElementById('wdsc-result');
@@ -401,7 +406,7 @@
     }
     var takeIn = FIELDS.filter(function (f) { return r.deciding.indexOf(f) === -1; });
     if (r.straddle === 2) {
-      return '<p>Your measurements match two sizes on this chart. ' + esc(sizeName(r.recommended)) +
+      return '<p>Your measurements match two sizes on this chart. Size ' + esc(r.recommended) +
         ' fits your ' + esc(listText(r.deciding)) + '; the ' + esc(listText(takeIn)) +
         ' would be taken in at fitting.</p>';
     }

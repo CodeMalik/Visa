@@ -98,7 +98,7 @@ window.addEventListener('load', function () {
 
 <section aria-labelledby="wdsc-why">
 	<h2 id="wdsc-why">Why bridal sizes run larger than your usual size</h2>
-	<p>If the size this calculator shows is higher than the number on the clothes you usually buy, nothing has gone wrong. Wedding gowns use a different numbering system from everyday clothing. According to <?php echo wdsc_external_link( 'https://www.theknot.com/content/wedding-dress-sizes', 'The Knot' ); // phpcs:ignore WordPress.Security.EscapeOutput ?>, bridal sizing runs roughly three sizes larger than everyday sizing, because it grew out of 1940s European sizing and was never brought into line with modern clothing labels.</p>
+	<p>If the size this calculator shows is higher than the number on the clothes you usually buy, nothing has gone wrong. Wedding gowns use a different numbering system from everyday clothing. According to <?php echo wdsc_external_link( 'https://www.theknot.com/content/wedding-dress-sizes', 'The Knot' ); // phpcs:ignore WordPress.Security.EscapeOutput ?>, bridal sizing runs roughly three sizes larger than everyday sizing, because the bridal system derives from 1940s European sizing.</p>
 	<p>There is no single bridal standard either. Each designer publishes its own chart, so the same measurements can match one size at one designer and a different size at another. That is why this calculator asks which designer you are ordering from, and why it never gives a single &ldquo;bridal size&rdquo;.</p>
 	<p>The size on a wedding dress label describes how that designer cuts the gown. It is a fitting reference for you and your seamstress, and nothing more.</p>
 </section>
@@ -154,7 +154,7 @@ window.addEventListener('load', function () {
 			}
 		}
 		?>
-		<h3>One set of measurements, <?php echo count( $wdsc_rows ); ?> charts</h3>
+		<h3>One set of measurements, <?php echo esc_html( wdsc_count_word( count( $wdsc_rows ) ) ); ?> charts</h3>
 		<p>Here is how example measurements of <?php echo esc_html( wdsc_num( $example['bust'] ) . ' / ' . wdsc_num( $example['waist'] ) . ' / ' . wdsc_num( $example['hips'] ) ); ?> inches land on each chart in this calculator.</p>
 		<div class="wdsc-table-wrap">
 			<table class="wdsc-example">
@@ -162,10 +162,10 @@ window.addEventListener('load', function () {
 				<thead>
 					<tr>
 						<th scope="col">Designer</th>
-						<th scope="col">Bust matches</th>
-						<th scope="col">Waist matches</th>
-						<th scope="col">Hips match</th>
-						<th scope="col">Size that fits all three</th>
+						<th scope="col">Bust <span class="wdsc-sr">matches</span></th>
+						<th scope="col">Waist <span class="wdsc-sr">matches</span></th>
+						<th scope="col">Hips <span class="wdsc-sr">match</span></th>
+						<th scope="col">Fits all three</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -204,9 +204,7 @@ window.addEventListener('load', function () {
 				<thead>
 					<tr>
 						<th scope="col">Designer</th>
-						<th scope="col">Chart</th>
 						<th scope="col">Sizes</th>
-						<th scope="col">Published in</th>
 						<th scope="col">Checked</th>
 						<th scope="col">Source</th>
 					</tr>
@@ -215,10 +213,8 @@ window.addEventListener('load', function () {
 				<?php foreach ( $data['brands'] as $wdsc_brand ) : ?>
 					<?php $wdsc_sizes = $wdsc_brand['sizes']; ?>
 					<tr>
-						<th scope="row"><?php echo esc_html( $wdsc_brand['brand_name'] ); ?></th>
-						<td><?php echo esc_html( $wdsc_brand['chart_label'] ); ?></td>
-						<td><?php echo esc_html( $wdsc_sizes[0]['size'] . ' to ' . $wdsc_sizes[ count( $wdsc_sizes ) - 1 ]['size'] ); ?></td>
-						<td><?php echo esc_html( wdsc_unit_name( $wdsc_brand['units'] ) ); ?></td>
+						<th scope="row"><?php echo esc_html( $wdsc_brand['brand_name'] ); ?><span class="wdsc-cell-note"><?php echo esc_html( $wdsc_brand['chart_label'] ); ?></span></th>
+						<td><?php echo esc_html( $wdsc_sizes[0]['size'] . ' to ' . $wdsc_sizes[ count( $wdsc_sizes ) - 1 ]['size'] ); ?><span class="wdsc-cell-note">in <?php echo esc_html( wdsc_unit_name( $wdsc_brand['units'] ) ); ?></span></td>
 						<td><time datetime="<?php echo esc_attr( $wdsc_brand['captured'] ); ?>"><?php echo esc_html( wdsc_date( $wdsc_brand['captured'] ) ); ?></time></td>
 						<td><?php echo wdsc_external_link( $wdsc_brand['source_url'], 'Official chart' ); // phpcs:ignore WordPress.Security.EscapeOutput ?></td>
 					</tr>

@@ -298,6 +298,10 @@ test('no horizontal page scroll at 360 px wide, for every brand and unit', async
   }
   await calculate(page, 'allure-bridals', 157.5, 127, 152.4);
   assert.equal(await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth), 0);
+  // Tables fit too, so source links and capture dates are never scrolled out of view.
+  const clipped = await page.$$eval('.wdsc-table-wrap', (wraps) =>
+    wraps.filter((w) => w.scrollWidth > w.clientWidth + 1).map((w) => w.firstElementChild.className));
+  assert.deepEqual(clipped, []);
   await context.close();
 });
 
@@ -348,6 +352,30 @@ test('script that fails to load shows the fallback once the page has loaded', as
   });
   assert.equal(await page.isVisible('.wdsc-fallback'), true);
   assert.equal(await page.isVisible('.wdsc-form'), false);
+  await context.close();
+});
+
+test('script delayed by a performance plugin: fallback first, then the tool recovers', async () => {
+  // Simulates "delay JavaScript" optimisation: the script tag is held back
+  // and only added after the page has finished loading.
+  const { page, context, errors } = await openPage({
+    route: async (route) => {
+      if (route.request().url() === base) {
+        const res = await route.fetch();
+        const html = (await res.text()).replace('<script src="plugin/assets/calculator.js"></script>', '');
+        await route.fulfill({ response: res, body: html });
+      } else {
+        await route.continue();
+      }
+    },
+  });
+  assert.equal(await page.isVisible('.wdsc-fallback'), true);
+  await page.addScriptTag({ url: 'plugin/assets/calculator.js' });
+  assert.equal(await page.isVisible('.wdsc-form'), true);
+  assert.equal(await page.isVisible('.wdsc-fallback'), false);
+  await calculate(page, 'maggie-sottero', 36, 30, 40);
+  assert.equal(await page.textContent('#wdsc-result .wdsc-size'), '12');
+  assert.deepEqual(errors, []);
   await context.close();
 });
 

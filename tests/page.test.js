@@ -126,7 +126,7 @@ test('brand selector lists the three brands with no default selection', () => {
 test('every brand on the page shows its source link and capture date', () => {
   const index = markup.match(/<table class="wdsc-index">[\s\S]*?<\/table>/)[0];
   for (const brand of db.brands) {
-    const row = index.match(new RegExp(`<th scope="row">${brand.brand_name}</th>[\\s\\S]*?</tr>`))[0];
+    const row = index.match(new RegExp(`<th scope="row">${brand.brand_name}<[\\s\\S]*?</tr>`))[0];
     assert.ok(row.includes(`href="${brand.source_url}"`), `${brand.brand_name} source link`);
     assert.ok(row.includes(`datetime="${brand.captured}"`), `${brand.brand_name} capture date`);
   }
