@@ -1,0 +1,180 @@
+{
+  "schema_version": "1.0",
+  "generated": "2026-10-13",
+  "units_note": "Each brand stores measurements in the units its own chart publishes. Convert for display only; never rewrite a stored value.",
+  "sizing_rule": {
+    "rule": "size_to_largest_measurement",
+    "statement": "Where bust, waist and hips map to different sizes, recommend the largest of the three.",
+    "support": [
+      {
+        "source": "Maggie Sottero — Sizing and Special Lengths",
+        "url": "https://ms-api.maggiesottero.com/product/Content/Files/2338/Sizing%20and%20Special%20Lengths%20F21.pdf",
+        "captured": "2026-10-13",
+        "says": "If measurements fall between sizes, order the larger size. For ballgowns the smaller size may be ordered if only the hip matches the larger one."
+      },
+      {
+        "source": "The Knot — The Ultimate Guide to Wedding Dress Sizes",
+        "url": "https://www.theknot.com/content/wedding-dress-sizes",
+        "captured": "2026-10-08",
+        "says": "A gown can typically be taken in about two sizes but let out by only one."
+      }
+    ]
+  },
+  "street_size_context": {
+    "claim": "Bridal sizing runs roughly three sizes larger than street/high-street sizing; the system derives from 1940s European sizing.",
+    "source": "The Knot — The Ultimate Guide to Wedding Dress Sizes",
+    "url": "https://www.theknot.com/content/wedding-dress-sizes",
+    "captured": "2026-10-08",
+    "display_as": "approximation",
+    "do_not": "Do not present this as a second hard size. Label it an approximation and cite the source on screen."
+  },
+  "brands": [
+    {
+      "brand_id": "azazie",
+      "brand_name": "Azazie",
+      "chart_type": "bridal",
+      "chart_label": "WD series (wedding dresses)",
+      "source_url": "https://www.azazie.com/size-chart",
+      "captured": "2026-10-13",
+      "units": "cm",
+      "regional_system": "US",
+      "notes": "Azazie publishes several charts; this is the WD (wedding dress) series. The brand also publishes A-series, junior bridesmaid, flower girl and maternity charts which are NOT used here. Azazie additionally offers custom sizing.",
+      "data_quality": [
+        "Bust/waist/hips verified consistent across the WD series and the matching A-series chart.",
+        "Hollow-to-hem values on the source page had inconsistent unit labelling and are therefore NOT included. Capture them manually before building the length feature."
+      ],
+      "sizes": [
+        { "size": "WD0",  "bust": 81,  "waist": 65,  "hips": 90 },
+        { "size": "WD2",  "bust": 84,  "waist": 67,  "hips": 93 },
+        { "size": "WD4",  "bust": 86,  "waist": 70,  "hips": 95 },
+        { "size": "WD6",  "bust": 89,  "waist": 72,  "hips": 98 },
+        { "size": "WD8",  "bust": 91,  "waist": 75,  "hips": 100 },
+        { "size": "WD10", "bust": 95,  "waist": 79,  "hips": 104 },
+        { "size": "WD12", "bust": 99,  "waist": 83,  "hips": 108 },
+        { "size": "WD14", "bust": 104, "waist": 88,  "hips": 113 },
+        { "size": "WD16", "bust": 110, "waist": 95,  "hips": 119 },
+        { "size": "WD18", "bust": 116, "waist": 101, "hips": 124 },
+        { "size": "WD20", "bust": 121, "waist": 107, "hips": 130 },
+        { "size": "WD22", "bust": 127, "waist": 114, "hips": 136 },
+        { "size": "WD24", "bust": 135, "waist": 122, "hips": 144 },
+        { "size": "WD26", "bust": 142, "waist": 130, "hips": 151 },
+        { "size": "WD28", "bust": 150, "waist": 138, "hips": 159 },
+        { "size": "WD30", "bust": 160, "waist": 149, "hips": 169 }
+      ],
+      "length_options": [],
+      "custom_sizing_available": true
+    },
+    {
+      "brand_id": "maggie-sottero",
+      "brand_name": "Maggie Sottero",
+      "chart_type": "bridal",
+      "chart_label": "USA size chart",
+      "source_url": "https://ms-api.maggiesottero.com/product/Content/Files/2338/Sizing%20and%20Special%20Lengths%20F21.pdf",
+      "source_context_url": "https://www.maggiesottero.com/blog/wedding-dress-size-chart-maggie/",
+      "captured": "2026-10-13",
+      "units": "in",
+      "regional_system": "US",
+      "notes": "Official brand PDF. Brand states these are guidelines and that fit points vary by style. Standard lengths are measured from the natural waist to the floor, NOT hollow-to-hem, so they are not interchangeable with Azazie length values.",
+      "data_quality": [
+        "VERIFY: size 24 hip is published as 56.6 in. The surrounding series runs 53.5 / 56.6 / 59.5, so this is very likely a typo for 56.5 in the source document. Value is stored AS PUBLISHED. Do not silently correct it — confirm with the brand or an authorised retailer first."
+      ],
+      "sizes": [
+        { "size": "0",  "bust": 31.5, "waist": 23.5, "hips": 34 },
+        { "size": "2",  "bust": 32.5, "waist": 24.5, "hips": 35 },
+        { "size": "4",  "bust": 33.5, "waist": 25.5, "hips": 36 },
+        { "size": "6",  "bust": 34.5, "waist": 26.5, "hips": 37 },
+        { "size": "8",  "bust": 36,   "waist": 28,   "hips": 38.5 },
+        { "size": "10", "bust": 37.5, "waist": 29.5, "hips": 40 },
+        { "size": "12", "bust": 39,   "waist": 31,   "hips": 41.5 },
+        { "size": "14", "bust": 41,   "waist": 33,   "hips": 43.5 },
+        { "size": "16", "bust": 43,   "waist": 35,   "hips": 45.5 },
+        { "size": "18", "bust": 45,   "waist": 37,   "hips": 47.5 },
+        { "size": "20", "bust": 48,   "waist": 40,   "hips": 50.5 },
+        { "size": "22", "bust": 51,   "waist": 43,   "hips": 53.5 },
+        { "size": "24", "bust": 54,   "waist": 46,   "hips": 56.6 },
+        { "size": "26", "bust": 57,   "waist": 49,   "hips": 59.5 },
+        { "size": "28", "bust": 60,   "waist": 52,   "hips": 62.5 }
+      ],
+      "length_options": [
+        { "label": "Standard — sheath / slim line / bias-cut", "waist_to_floor_in": "45.5-46" },
+        { "label": "Standard — A-line", "waist_to_floor_in": "46.5-47" },
+        { "label": "Standard — full A-line / pick-up / fit & flare", "waist_to_floor_in": "47.5-48" },
+        { "label": "Standard — ballgown", "waist_to_floor_in": "48.5-49" },
+        { "label": "Petite (3FS)", "adjustment_in": -3 },
+        { "label": "5FS", "adjustment_in": -5 },
+        { "label": "3FL", "adjustment_in": 3 },
+        { "label": "5FL", "adjustment_in": 5 }
+      ],
+      "length_measured_from": "natural_waist",
+      "custom_sizing_available": false
+    },
+    {
+      "brand_id": "allure-bridals",
+      "brand_name": "Allure Bridals",
+      "chart_type": "bridal",
+      "chart_label": "Dress size guide",
+      "source_url": "https://allurebridals.com/pages/size-guide",
+      "source_context_url": "https://allurebridals.com/products/a1419",
+      "captured": "2026-10-13",
+      "units": "in",
+      "regional_system": "US",
+      "notes": "Chart captured from the size guide shown on a product page; the brand also publishes a cm version with identical sizes. Chart includes arm measurements which are not used here.",
+      "data_quality": [
+        "VERIFY: size 20 hips is published as 49.6 in. The surrounding series runs 47.5 / 49.6 / 51.5, so this is very likely a typo for 49.5 in the source. Value is stored AS PUBLISHED. Do not silently correct it.",
+        "The 'Size Guide' link on the product page points to '#'; the canonical guide lives at the pages/size-guide URL. Re-confirm that URL at build time."
+      ],
+      "sizes": [
+        { "size": "0",  "bust": 32,   "waist": 23.5, "hips": 35.5 },
+        { "size": "2",  "bust": 33,   "waist": 24.5, "hips": 36.5 },
+        { "size": "4",  "bust": 34,   "waist": 25.5, "hips": 37.5 },
+        { "size": "6",  "bust": 35,   "waist": 26.5, "hips": 38.5 },
+        { "size": "8",  "bust": 36.5, "waist": 28,   "hips": 40 },
+        { "size": "10", "bust": 38,   "waist": 30,   "hips": 41.5 },
+        { "size": "12", "bust": 39.5, "waist": 31.5, "hips": 43 },
+        { "size": "14", "bust": 41,   "waist": 33,   "hips": 44.5 },
+        { "size": "16", "bust": 42.5, "waist": 35.5, "hips": 46 },
+        { "size": "18", "bust": 44.5, "waist": 36.5, "hips": 47.5 },
+        { "size": "20", "bust": 46.5, "waist": 38.5, "hips": 49.6 },
+        { "size": "22", "bust": 48.5, "waist": 41,   "hips": 51.5 },
+        { "size": "24", "bust": 50.5, "waist": 44,   "hips": 53.5 },
+        { "size": "26", "bust": 53.5, "waist": 47,   "hips": 56.5 },
+        { "size": "28", "bust": 56.5, "waist": 50,   "hips": 59.5 },
+        { "size": "30", "bust": 59.5, "waist": 53,   "hips": 62.5 }
+      ],
+      "length_options": [],
+      "custom_sizing_available": false
+    }
+  ],
+  "excluded_brands": [
+    {
+      "brand_name": "David's Bridal",
+      "reason": "No official size chart retrievable at capture time. davidsbridal.com/size-chart returned a client error and no official chart page surfaced in search; all results were third-party scraper sites.",
+      "action": "Capture manually from the live site and add. Do NOT source from aggregator sites."
+    },
+    {
+      "brand_name": "BHLDN",
+      "reason": "bhldn.com/size-guide is disallowed to automated fetching by the site's robots policy.",
+      "action": "Capture manually in a browser and add."
+    },
+    {
+      "brand_name": "Essense of Australia",
+      "reason": "Official chart page returned a client error; only retailer-published versions (e.g. Kleinfeld) were available, which are second-hand.",
+      "action": "Capture from essensedesigns.com directly, or omit."
+    },
+    {
+      "brand_name": "Morilee",
+      "reason": "Not attempted in this capture pass.",
+      "action": "Capture from the brand's own site before adding."
+    },
+    {
+      "brand_name": "Lulus",
+      "reason": "Not attempted in this capture pass. Note Lulus is a general retailer, not a bridal house; its chart is street sizing, so adding it would mix two sizing systems in one selector.",
+      "action": "If added, label it clearly as street sizing, separately from the bridal charts."
+    }
+  ],
+  "maintenance": {
+    "review_cadence_months": 6,
+    "next_review": "2027-04-13",
+    "procedure": "Re-open each source_url, compare every row, update captured date on change, and retain the previous version with its own capture date."
+  }
+}
